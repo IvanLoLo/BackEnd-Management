@@ -5,7 +5,9 @@ import com.ttd.manage_ms.models.Delivery;
 import com.ttd.manage_ms.repositories.DeliveryRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,7 +58,25 @@ public class DeliveryController {
 
     //TODO Eliminar domicilio (Buscar por id)
 
+
     //TODO Editar domicilio (Buscar por id) FindByIdAndUpdate
+    @PutMapping("pedidos/edit/{id}")
+    Delivery editDelivery(@RequestBody Map<String, Object> updateDataDelivery, @PathVariable String id){
+        Delivery delivery = deliveryRepository.findById(id).orElse(null);
+        delivery.setUsernameEmisor((String) updateDataDelivery.get("usernameEmisor"));
+        delivery.setUsernameReceptor((String) updateDataDelivery.get("usernameReceptor"));
+        delivery.setCiudadOrigen((String) updateDataDelivery.get("ciudadOrigen"));
+        delivery.setCiudadDestino((String) updateDataDelivery.get("ciudadDestino"));
+        delivery.setDireccionOrigen((String) updateDataDelivery.get("direccionOrigen"));
+        delivery.setDireccionDestino((String) updateDataDelivery.get("direccionDestino"));
+        delivery.setValue((Integer) updateDataDelivery.get("value"));
+        delivery.setDescription((String) updateDataDelivery.get("description"));
+        delivery.setEstado((String) updateDataDelivery.get("estado"));
+        delivery.setPickUpDate((Date) updateDataDelivery.get("pickUpDate"));
+        delivery.setDeliverDate((Date) updateDataDelivery.get("deliverDate"));
+        delivery.setPqr((String) updateDataDelivery.get("pqr"));
+        return deliveryRepository.save(delivery);
+    }
 
 
 }
