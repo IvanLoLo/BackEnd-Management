@@ -57,7 +57,9 @@ public class DeliveryController {
     //TODO Detalles domicilio (Buscar por id)
 
     //TODO Eliminar domicilio (Buscar por id)
-
+    @DeleteMapping("/pedidos/delete/{id}")
+    void delete(@PathVariable("id")String id){
+        deliveryRepository.deleteById(id);}
 
     //TODO Editar domicilio (Buscar por id) FindByIdAndUpdate
     @PutMapping("pedidos/edit/{id}")
