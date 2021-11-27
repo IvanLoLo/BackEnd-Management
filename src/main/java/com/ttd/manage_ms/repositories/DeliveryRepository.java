@@ -11,4 +11,5 @@ public interface DeliveryRepository extends MongoRepository<Delivery, String> {
     List<Delivery> findByUsernameReceptor (String usernameReceptor);
     List<Delivery> findByEstado (String estado);
 
+    //List<Delivery> findByDetailsId(String );
 }

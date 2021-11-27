@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -54,12 +55,57 @@ public class DeliveryController {
         return deliveryRepository.save(delivery);
     }
 
+
     //TODO Detalles domicilio (Buscar por id)
+    @GetMapping("/pedidos/details/{id}")
+    List<Delivery> getId(@PathVariable String id, @RequestParam(required = false) String filtrar) {
+
+        //List<Delivery> deliveryDetails = deliveryRepository.findByDetailsId(id);
+        List<Delivery> deliveryDetails = deliveryRepository.findByUsernameEmisor(id);
+
+        if (filtrar == null) {
+            if ((deliveryDetails == null) || (deliveryDetails.isEmpty())) {
+                throw new DeliveryNotFoundException("No se encontraron pedidos relacionados con el ID: " + id);
+            }
+
+            return deliveryDetails.stream().collect(Collectors.toList());
+
+        } else if (filtrar.equals("Id")) {
+            if (deliveryDetails == null || deliveryDetails.isEmpty())
+                throw new DeliveryNotFoundException("No se encontraron pedidos relacionados con el ID: " + id);
+
+            return deliveryDetails;
+        }
+            throw new DeliveryNotFoundException("El filtro para el ID no es válido");
+    }
+
+    //Delivery DetailsDelivery(@RequestBody Map<String, Object> detailsDelivery, @PathVariable String id){
+    //    Delivery deliveryDetails = deliveryRepository.findById(id).orElse(null);
+
+  //      if (id == null) {
+//            if (deliveryDetails == null) {
+              //  throw new DeliveryNotFoundException("No se encontraron pedidos relacionados con el ID: " + id);
+            //}
+
+          //  return deliveryDetails;
+
+        //} else if (id.equals("Id")) {
+      //      if (deliveryDetails == null)
+    //            throw new DeliveryNotFoundException("No se encontraron pedidos relacionados con el ID: " + id);
+
+  //          return deliveryDetails;
+//        }
+  //      throw new DeliveryNotFoundException("El filtro para el ID no es válido");
+//    }
+
+
+
 
     //TODO Eliminar domicilio (Buscar por id)
     @DeleteMapping("/pedidos/delete/{id}")
     void delete(@PathVariable("id")String id){
         deliveryRepository.deleteById(id);}
+
 
     //TODO Editar domicilio (Buscar por id) FindByIdAndUpdate
     @PutMapping("pedidos/edit/{id}")
