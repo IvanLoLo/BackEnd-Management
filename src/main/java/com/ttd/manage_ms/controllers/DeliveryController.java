@@ -79,28 +79,6 @@ public class DeliveryController {
             throw new DeliveryNotFoundException("El filtro para el ID no es válido");
     }
 
-    //Delivery DetailsDelivery(@RequestBody Map<String, Object> detailsDelivery, @PathVariable String id){
-    //    Delivery deliveryDetails = deliveryRepository.findById(id).orElse(null);
-
-  //      if (id == null) {
-//            if (deliveryDetails == null) {
-              //  throw new DeliveryNotFoundException("No se encontraron pedidos relacionados con el ID: " + id);
-            //}
-
-          //  return deliveryDetails;
-
-        //} else if (id.equals("Id")) {
-      //      if (deliveryDetails == null)
-    //            throw new DeliveryNotFoundException("No se encontraron pedidos relacionados con el ID: " + id);
-
-  //          return deliveryDetails;
-//        }
-  //      throw new DeliveryNotFoundException("El filtro para el ID no es válido");
-//    }
-
-
-
-
     //TODO Eliminar domicilio (Buscar por id)
     @DeleteMapping("/pedidos/delete/{id}")
     void delete(@PathVariable("id")String id){
