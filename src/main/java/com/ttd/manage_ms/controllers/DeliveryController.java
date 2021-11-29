@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -54,12 +55,35 @@ public class DeliveryController {
         return deliveryRepository.save(delivery);
     }
 
+
     //TODO Detalles domicilio (Buscar por id)
+    @GetMapping("/pedidos/details/{id}")
+    Object getId(@PathVariable String id, @RequestParam(required = false) String FilterDetails) {
+
+        Optional<Delivery> deliveryDetails = deliveryRepository.findById(id);
+        //List<Delivery> deliveryDetails = deliveryRepository.findByUsernameEmisor(id);
+
+        if (FilterDetails == null) {
+            if ((deliveryDetails == null) || (deliveryDetails.isEmpty())) {
+                throw new DeliveryNotFoundException("No se encontraron pedidos relacionados con el ID: " + id);
+            }
+
+            return deliveryDetails.stream().collect(Collectors.toList());
+
+        } else if (FilterDetails.equals("Id")) {
+            if (deliveryDetails == null || deliveryDetails.isEmpty())
+                throw new DeliveryNotFoundException("No se encontraron pedidos relacionados con el ID: " + id);
+
+            return deliveryDetails;
+        }
+            throw new DeliveryNotFoundException("El filtro para el ID no es válido");
+    }
 
     //TODO Eliminar domicilio (Buscar por id)
     @DeleteMapping("/pedidos/delete/{id}")
     void delete(@PathVariable("id")String id){
         deliveryRepository.deleteById(id);}
+
 
     //TODO Editar domicilio (Buscar por id) FindByIdAndUpdate
     @PutMapping("pedidos/edit/{id}")
