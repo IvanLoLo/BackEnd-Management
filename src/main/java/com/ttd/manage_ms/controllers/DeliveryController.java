@@ -58,19 +58,19 @@ public class DeliveryController {
 
     //TODO Detalles domicilio (Buscar por id)
     @GetMapping("/pedidos/details/{id}")
-    List<Delivery> getId(@PathVariable String id, @RequestParam(required = false) String filtrar) {
+    Object getId(@PathVariable String id, @RequestParam(required = false) String FilterDetails) {
 
-        //List<Delivery> deliveryDetails = deliveryRepository.findByDetailsId(id);
-        List<Delivery> deliveryDetails = deliveryRepository.findByUsernameEmisor(id);
+        Optional<Delivery> deliveryDetails = deliveryRepository.findById(id);
+        //List<Delivery> deliveryDetails = deliveryRepository.findByUsernameEmisor(id);
 
-        if (filtrar == null) {
+        if (FilterDetails == null) {
             if ((deliveryDetails == null) || (deliveryDetails.isEmpty())) {
                 throw new DeliveryNotFoundException("No se encontraron pedidos relacionados con el ID: " + id);
             }
 
             return deliveryDetails.stream().collect(Collectors.toList());
 
-        } else if (filtrar.equals("Id")) {
+        } else if (FilterDetails.equals("Id")) {
             if (deliveryDetails == null || deliveryDetails.isEmpty())
                 throw new DeliveryNotFoundException("No se encontraron pedidos relacionados con el ID: " + id);
 

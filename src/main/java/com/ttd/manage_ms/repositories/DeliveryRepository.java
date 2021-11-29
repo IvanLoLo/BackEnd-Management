@@ -4,6 +4,7 @@ import com.ttd.manage_ms.models.Delivery;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DeliveryRepository extends MongoRepository<Delivery, String> {
 
@@ -11,5 +12,5 @@ public interface DeliveryRepository extends MongoRepository<Delivery, String> {
     List<Delivery> findByUsernameReceptor (String usernameReceptor);
     List<Delivery> findByEstado (String estado);
 
-    //List<Delivery> findByDetailsId(String );
+    Optional<Delivery> findById(String id);
 }
