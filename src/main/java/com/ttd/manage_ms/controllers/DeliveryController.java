@@ -58,49 +58,47 @@ public class DeliveryController {
 
     //TODO Detalles domicilio (Buscar por id)
     @GetMapping("/pedidos/details/{id}")
-    Object getId(@PathVariable String id, @RequestParam(required = false) String FilterDetails) {
+    Object getId(@PathVariable String id) {
 
         Optional<Delivery> deliveryDetails = deliveryRepository.findById(id);
-        //List<Delivery> deliveryDetails = deliveryRepository.findByUsernameEmisor(id);
 
-        if (FilterDetails == null) {
-            if ((deliveryDetails == null) || (deliveryDetails.isEmpty())) {
-                throw new DeliveryNotFoundException("No se encontraron pedidos relacionados con el ID: " + id);
-            }
+        if (deliveryDetails == null || deliveryDetails.isEmpty())
+            throw new DeliveryNotFoundException("No se encontraron pedidos relacionados con el ID: " + id);
 
-            return deliveryDetails.stream().collect(Collectors.toList());
+        return deliveryDetails;
 
-        } else if (FilterDetails.equals("Id")) {
-            if (deliveryDetails == null || deliveryDetails.isEmpty())
-                throw new DeliveryNotFoundException("No se encontraron pedidos relacionados con el ID: " + id);
-
-            return deliveryDetails;
-        }
-            throw new DeliveryNotFoundException("El filtro para el ID no es válido");
     }
 
     //TODO Eliminar domicilio (Buscar por id)
     @DeleteMapping("/pedidos/delete/{id}")
-    void delete(@PathVariable("id")String id){
-        deliveryRepository.deleteById(id);}
-
+    String delete(@PathVariable("id")String id) {
+        if(deliveryRepository.existsById(id)){
+            deliveryRepository.deleteById(id);
+            return "El domicilio fue eliminado satisfactoriamente";
+        }else throw new DeliveryNotFoundException("No se encontró un pedido con el id: "+id);
+    }
 
     //TODO Editar domicilio (Buscar por id) FindByIdAndUpdate
     @PutMapping("pedidos/edit/{id}")
-    Delivery editDelivery(@RequestBody Map<String, Object> updateDataDelivery, @PathVariable String id){
+    Delivery editDelivery(@RequestBody Delivery updateDataDelivery, @PathVariable String id){
+        if (!deliveryRepository.existsById(id))
+            throw new DeliveryNotFoundException("No se encontró un pedido con el id: "+id);
+
         Delivery delivery = deliveryRepository.findById(id).orElse(null);
-        delivery.setUsernameEmisor((String) updateDataDelivery.get("usernameEmisor"));
-        delivery.setUsernameReceptor((String) updateDataDelivery.get("usernameReceptor"));
-        delivery.setCiudadOrigen((String) updateDataDelivery.get("ciudadOrigen"));
-        delivery.setCiudadDestino((String) updateDataDelivery.get("ciudadDestino"));
-        delivery.setDireccionOrigen((String) updateDataDelivery.get("direccionOrigen"));
-        delivery.setDireccionDestino((String) updateDataDelivery.get("direccionDestino"));
-        delivery.setValue((Integer) updateDataDelivery.get("value"));
-        delivery.setDescription((String) updateDataDelivery.get("description"));
-        delivery.setEstado((String) updateDataDelivery.get("estado"));
-        delivery.setPickUpDate((Date) updateDataDelivery.get("pickUpDate"));
-        delivery.setDeliverDate((Date) updateDataDelivery.get("deliverDate"));
-        delivery.setPqr((String) updateDataDelivery.get("pqr"));
+
+        delivery.setUsernameEmisor(updateDataDelivery.getUsernameEmisor());
+        delivery.setUsernameReceptor(updateDataDelivery.getUsernameReceptor());
+        delivery.setCiudadOrigen(updateDataDelivery.getCiudadOrigen());
+        delivery.setCiudadDestino(updateDataDelivery.getCiudadDestino());
+        delivery.setDireccionOrigen(updateDataDelivery.getDireccionOrigen());
+        delivery.setDireccionDestino(updateDataDelivery.getDireccionDestino());
+        delivery.setValue(updateDataDelivery.getValue());
+        delivery.setDescription(updateDataDelivery.getDescription());
+        delivery.setEstado(updateDataDelivery.getEstado());
+        delivery.setPickUpDate(updateDataDelivery.getPickUpDate());
+        delivery.setDeliverDate(updateDataDelivery.getDeliverDate());
+        delivery.setPqr(updateDataDelivery.getPqr());
+
         return deliveryRepository.save(delivery);
     }
 
